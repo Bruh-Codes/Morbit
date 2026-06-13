@@ -25,31 +25,6 @@ Morbit is built around that shape:
 - Switch between light and dark themes
 - Support both Robinhood and Arbitrum markets in the same codebase
 
-## Demo Flow
-
-If you are showing Morbit to a judge, this is the cleanest path:
-
-1. Open the Markets page and show the assets list and filters.
-2. Connect a wallet and switch to the Dashboard.
-3. Open a reserve detail page and move between Overview and Your info.
-4. Show one supply/borrow/repay style action or action panel.
-5. Point out that the same app supports both Robinhood and Arbitrum markets.
-
-## Hackathon Fit
-
-HackQuest asks for projects deployed on an Arbitrum chain and judges them on:
-
-- Smart contract quality
-- Product-market fit
-- Innovation and creativity
-- Real problem solving
-
-Morbit maps to that rubric by combining:
-
-- a deployed lending experience on Robinhood Chain Testnet
-- an Arbitrum-supported market switcher
-- a production-style frontend with wallets, dashboards, and reserve views
-- contract-backed asset flows rather than a static UI
 
 ## Tech Stack
 
