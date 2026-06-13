@@ -7,7 +7,7 @@
 
 export const CHAIN_ID = 421614;
 
-export const RPC_URL = "https://sepolia.arbitrum.io/rpc";
+export const RPC_URL = "https://arbitrum-sepolia.publicnode.com";
 export const EXPLORER_URL = "https://sepolia-explorer.arbitrum.io";
 
 export const tokens = {

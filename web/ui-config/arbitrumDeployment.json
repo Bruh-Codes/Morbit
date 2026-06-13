@@ -1,6 +1,6 @@
 {
   "chainId": 421614,
-  "rpcUrl": "https://sepolia.arbitrum.io/rpc",
+  "rpcUrl": "https://arbitrum-sepolia.publicnode.com",
   "explorerUrl": "https://sepolia-explorer.arbitrum.io",
   "pool": "0x73caA38805406520f1A6D8c4BD8D1F6Ca7CC5549",
   "weth": "",

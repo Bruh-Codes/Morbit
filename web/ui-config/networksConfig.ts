@@ -41,7 +41,7 @@ export type BaseNetworkConfig = Omit<NetworkConfig, 'explorerLinkBuilder'>;
 const ROBINHOOD_RPC_URL = robinhoodDeployment.rpcUrl;
 const ROBINHOOD_EXPLORER_URL = robinhoodDeployment.explorerUrl;
 
-const ARBITRUM_SEPOLIA_RPC_URL = arbitrumSepoliaDeployment.rpcUrl || 'https://sepolia-sequencer.arbitrum.io/rpc';
+const ARBITRUM_SEPOLIA_RPC_URL = arbitrumSepoliaDeployment.rpcUrl || 'https://arbitrum-sepolia.publicnode.com';
 const ARBITRUM_SEPOLIA_EXPLORER_URL = arbitrumSepoliaDeployment.explorerUrl || 'https://sepolia-explorer.arbitrum.io';
 
 export const robinhoodTestnet: Chain = {
