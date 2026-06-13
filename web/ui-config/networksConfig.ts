@@ -1,6 +1,7 @@
 import { ChainId } from 'protocol/aave-compat';
-import { arbitrum, Chain } from 'wagmi/chains';
+import { arbitrum, arbitrumSepolia, Chain } from 'wagmi/chains';
 import robinhoodDeployment from './robinhoodDeployment.json';
+import arbitrumSepoliaDeployment from './arbitrumDeployment.json';
 
 export type ExplorerLinkBuilderProps = {
   tx?: string;
@@ -40,6 +41,9 @@ export type BaseNetworkConfig = Omit<NetworkConfig, 'explorerLinkBuilder'>;
 const ROBINHOOD_RPC_URL = robinhoodDeployment.rpcUrl;
 const ROBINHOOD_EXPLORER_URL = robinhoodDeployment.explorerUrl;
 
+const ARBITRUM_SEPOLIA_RPC_URL = arbitrumSepoliaDeployment.rpcUrl || 'https://sepolia-sequencer.arbitrum.io/rpc';
+const ARBITRUM_SEPOLIA_EXPLORER_URL = arbitrumSepoliaDeployment.explorerUrl || 'https://sepolia-explorer.arbitrum.io';
+
 export const robinhoodTestnet: Chain = {
   id: ChainId.robinhood_testnet,
   name: 'Robinhood Chain Testnet',
@@ -54,6 +58,8 @@ export const robinhoodTestnet: Chain = {
   testnet: true,
 };
 
+
+
 export const testnetConfig: Record<string, BaseNetworkConfig> = {
   [ChainId.robinhood_testnet]: {
     name: 'Robinhood Chain Testnet',
@@ -65,8 +71,21 @@ export const testnetConfig: Record<string, BaseNetworkConfig> = {
     baseAssetDecimals: 18,
     explorerLink: ROBINHOOD_EXPLORER_URL,
     isTestnet: true,
-    networkLogoPath: '/icons/networks/arbitrum.svg',
+    networkLogoPath: '/icons/networks/robinhood.svg',
     wagmiChain: robinhoodTestnet,
+  },
+  [ChainId.arbitrum_sepolia]: {
+    name: 'Arbitrum Sepolia',
+    displayName: 'Arbitrum Sepolia',
+    publicJsonRPCUrl: [ARBITRUM_SEPOLIA_RPC_URL],
+    baseUniswapAdapter: '0x0',
+    baseAssetSymbol: 'ETH',
+    wrappedBaseAssetSymbol: 'WETH',
+    baseAssetDecimals: 18,
+    explorerLink: ARBITRUM_SEPOLIA_EXPLORER_URL,
+    isTestnet: true,
+    networkLogoPath: '/icons/networks/arbitrum.svg',
+    wagmiChain: arbitrumSepolia,
   },
 };
 

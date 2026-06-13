@@ -1,9 +1,11 @@
 import { ReactNode } from 'react';
-import { AaveV3Arbitrum, ChainId } from 'protocol/aave-compat';
+import { ChainId } from 'protocol/aave-compat';
 
 import robinhoodDeployment from './robinhoodDeployment.json';
+import arbitrumDeployment from './arbitrumDeployment.json';
 
 const RWA_POOL_ADDRESS = robinhoodDeployment.pool;
+const ARBITRUM_POOL_ADDRESS = arbitrumDeployment.pool;
 
 export type MarketDataType = {
   v3?: boolean;
@@ -51,7 +53,7 @@ export type MarketDataType = {
 
 export enum CustomMarket {
   proto_robinhood_rwa = 'proto_robinhood_rwa',
-  proto_arbitrum_v3 = 'proto_arbitrum_v3',
+  proto_arbitrum_sepolia = 'proto_arbitrum_sepolia',
 }
 
 export const marketsData: {
@@ -73,18 +75,20 @@ export const marketsData: {
       UI_INCENTIVE_DATA_PROVIDER: '0x0000000000000000000000000000000000000000',
     },
   },
-  [CustomMarket.proto_arbitrum_v3]: {
-    marketTitle: 'Arbitrum',
-    market: CustomMarket.proto_arbitrum_v3,
-    chainId: ChainId.arbitrum_one,
+  [CustomMarket.proto_arbitrum_sepolia]: {
+    marketTitle: 'Arbitrum RWA',
+    market: CustomMarket.proto_arbitrum_sepolia,
+    chainId: ChainId.arbitrum_sepolia,
     v3: true,
+    logo: '/icons/networks/arbitrum.svg',
+    permitDisabled: true,
     enabledFeatures: {},
     addresses: {
-      LENDING_POOL_ADDRESS_PROVIDER: AaveV3Arbitrum.POOL_ADDRESSES_PROVIDER,
-      LENDING_POOL: AaveV3Arbitrum.POOL,
-      WALLET_BALANCE_PROVIDER: AaveV3Arbitrum.WALLET_BALANCE_PROVIDER,
-      UI_POOL_DATA_PROVIDER: AaveV3Arbitrum.UI_POOL_DATA_PROVIDER,
-      UI_INCENTIVE_DATA_PROVIDER: AaveV3Arbitrum.UI_INCENTIVE_DATA_PROVIDER,
+      LENDING_POOL_ADDRESS_PROVIDER: ARBITRUM_POOL_ADDRESS,
+      LENDING_POOL: ARBITRUM_POOL_ADDRESS,
+      WALLET_BALANCE_PROVIDER: ARBITRUM_POOL_ADDRESS,
+      UI_POOL_DATA_PROVIDER: ARBITRUM_POOL_ADDRESS,
+      UI_INCENTIVE_DATA_PROVIDER: '0x0000000000000000000000000000000000000000',
     },
   },
 };

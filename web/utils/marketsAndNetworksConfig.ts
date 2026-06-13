@@ -111,7 +111,7 @@ export function getSupportedChainIds(): number[] {
 
 export const availableMarkets = Object.keys(marketsData).filter(
   (key) =>
-    key === CustomMarket.proto_robinhood_rwa || key === CustomMarket.proto_arbitrum_v3
+    key === CustomMarket.proto_robinhood_rwa || key === CustomMarket.proto_arbitrum_sepolia
 ) as CustomMarket[];
 
 const linkBuilder =

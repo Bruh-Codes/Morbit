@@ -98,7 +98,7 @@ export const showExternalIncentivesTooltip = (
   };
 
   if (
-    currentMarket === CustomMarket.proto_arbitrum_v3 &&
+    currentMarket === CustomMarket.proto_arbitrum_sepolia &&
     protocolAction === ProtocolAction.supply &&
     (symbol == 'rsETH' || symbol == 'wrsETH')
   ) {

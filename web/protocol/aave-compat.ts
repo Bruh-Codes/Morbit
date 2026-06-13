@@ -10,15 +10,18 @@ import {
   fetchRwaUserAccountData,
   fetchRwaUserReserves,
   getErc20Contract,
-  getRobinhoodProvider,
+  getFallbackProvider,
+  getPoolAddress,
   reserveId,
   RWA_BASE_CURRENCY_DATA,
-  RWA_POOL_ADDRESS,
   rwaPoolInterface,
   toReserveDataHumanized,
   toUserReserveDataHumanized,
   ZERO_ADDRESS,
 } from './rwaContracts';
+import { getDeployment, setDeployment } from './currentDeployment';
+import robinhoodDeployment from '../ui-config/robinhoodDeployment.json';
+import arbitrumDeployment from '../ui-config/arbitrumDeployment.json';
 import { rwaTokens } from './rwaTokens';
 import {
   normalize as normalizeLocal,
@@ -26,7 +29,7 @@ import {
   valueToBigNumber as valueToBigNumberLocal,
   valueToBigNumber,
 } from './mathUtils';
-import { ChainId as ChainIdEnum } from './types';
+import { ChainId } from './types';
 
 export {
   _formatUserSummaryAndIncentives,
@@ -49,8 +52,8 @@ export class PoolBundle {
   [key: string]: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(provider?: any, config?: { POOL?: string; [key: string]: any }) {
-    const poolAddress = (config?.POOL || RWA_POOL_ADDRESS) as string;
-    const boundProvider = provider || getRobinhoodProvider();
+    const poolAddress = (config?.POOL || getPoolAddress()) as string;
+    const boundProvider = provider || getFallbackProvider();
 
     const buildTx = (user: string, data: string) => ({
       to: poolAddress,
@@ -143,7 +146,7 @@ export const ERC20Service = class {
   [key: string]: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(provider?: any) {
-    this.provider = provider || getRobinhoodProvider();
+    this.provider = provider || getFallbackProvider();
     // poolSlice destructures { getTokenData } from instances
     this.getTokenData = this.getTokenData.bind(this);
   }
@@ -202,8 +205,14 @@ export const ERC20Service = class {
 export const WalletBalanceProvider = class {
   [key: string]: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructor(args?: { walletBalanceProviderAddress?: string; provider?: any }) {
-    this.provider = args?.provider || getRobinhoodProvider();
+  constructor(args?: { walletBalanceProviderAddress?: string; provider?: any; chainId?: number }) {
+    this.provider = args?.provider || getFallbackProvider();
+    const cid = args?.chainId;
+    if (cid === ChainId.robinhood_testnet || (!cid && getDeployment()?.chainId !== ChainId.arbitrum_sepolia)) {
+      setDeployment(robinhoodDeployment);
+    } else if (cid === ChainId.arbitrum_sepolia) {
+      setDeployment(arbitrumDeployment);
+    }
   }
   async batchBalanceOf(users: string[], tokens: string[], _options?: any): Promise<any[]> {
     const user = users[0];
@@ -245,7 +254,13 @@ export const UiPoolDataProvider = class {
   [key: string]: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(args?: { uiPoolDataProviderAddress?: string; provider?: any; chainId?: number }) {
-    this.provider = args?.provider || getRobinhoodProvider();
+    this.provider = args?.provider || getFallbackProvider();
+    const cid = args?.chainId;
+    if (cid === ChainId.robinhood_testnet || (!cid && getDeployment()?.chainId !== ChainId.arbitrum_sepolia)) {
+      setDeployment(robinhoodDeployment);
+    } else if (cid === ChainId.arbitrum_sepolia) {
+      setDeployment(arbitrumDeployment);
+    }
   }
   async getReservesHumanized(..._args: any[]): Promise<any> {
     const reserves = await fetchRwaReserves(this.provider);
@@ -725,9 +740,11 @@ export const markets = async (_client: any, args?: any): Promise<any> => {
       0
     );
 
+    const dep = getPoolAddress();
+    const chainId = ChainId.robinhood_testnet;
     const market = {
-      address: RWA_POOL_ADDRESS,
-      chainId: ChainIdEnum.robinhood_testnet,
+      address: dep,
+      chainId,
       name: 'Morbit RWA',
       totalMarketSize,
       totalAvailableLiquidity,
@@ -850,8 +867,8 @@ export class Pool {
   [key: string]: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(provider?: any, config?: { POOL?: string; [key: string]: any }) {
-    this.provider = provider || getRobinhoodProvider();
-    this.poolAddress = config?.POOL || RWA_POOL_ADDRESS;
+    this.provider = provider || getFallbackProvider();
+    this.poolAddress = config?.POOL || getPoolAddress();
   }
 
   private dlpAction(user: string, data: string): any {

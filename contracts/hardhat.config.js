@@ -28,5 +28,11 @@ export default defineConfig({
       chainId: Number(process.env.ROBINHOOD_CHAIN_ID || 46630),
       accounts: [configVariable("DEPLOYER_PRIVATE_KEY")],
     },
+    arbitrumSepolia: {
+      type: "http",
+      url: configVariable("ARBITRUM_RPC_URL"),
+      chainId: Number(process.env.ARBITRUM_CHAIN_ID || 421614),
+      accounts: [configVariable("DEPLOYER_PRIVATE_KEY")],
+    },
   },
 });
