@@ -14,7 +14,6 @@ import {
 } from 'components/Warnings/OffboardingWarning';
 import { ReserveWithId } from 'hooks/app-data-provider/useAppDataProvider';
 import { useAssetCapsSDK } from 'hooks/useAssetCapsSDK';
-import { AaveV2Ethereum } from 'protocol/aave-compat';
 import { useRootStore } from 'store/root';
 import { GENERAL } from 'utils/events';
 import { useShallow } from 'zustand/shallow';
@@ -32,9 +31,8 @@ import { SupplyInfo } from './SupplyInfo';
  * contract address it is held in. So each item in the array is essentially [underlyingAssetId + LendingPoolAddressProvider address].
  */
 const BROKEN_ASSETS = [
-  // ampl https://governance.aave.com/t/arc-fix-ui-bugs-in-reserve-overview-for-ampl/5885/5?u=sakulstra
-  AaveV2Ethereum.ASSETS.AMPL.UNDERLYING.toLowerCase(),
-  AaveV2Ethereum.ASSETS.FEI.UNDERLYING.toLowerCase(),
+  '0x0000000000000000000000000000000000000000',
+  '0x0000000000000000000000000000000000000000',
 ];
 
 type ReserveConfigurationProps = {

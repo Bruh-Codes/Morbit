@@ -6,9 +6,7 @@ import { ComputedReserveData } from 'hooks/app-data-provider/useAppDataProvider'
 import { FormattedReservesAndIncentives } from 'hooks/pool/usePoolFormattedReserves';
 import { SignedParams } from 'hooks/useApprovalTx';
 import {
-  AaveSafetyModule,
   AaveTokenV3Service,
-  AaveV3Ethereum,
   ApproveDelegationType,
   ApproveType,
   BaseDebtToken,
@@ -792,10 +790,7 @@ export const createPoolSlice: StateCreator<
       },
     },
     generateSignatureRequest: async ({ token, amount, deadline, spender }, opts = {}) => {
-      const v3TokensWithEip712DomainSupport = [
-        AaveV3Ethereum.ASSETS.AAVE.UNDERLYING.toLowerCase(),
-        AaveSafetyModule.STK_AAVE.toLowerCase(),
-      ];
+      const v3TokensWithEip712DomainSupport: string[] = [];
 
       const provider = get().jsonRpcProvider(opts.chainId);
 

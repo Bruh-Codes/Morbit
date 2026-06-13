@@ -364,13 +364,7 @@ const makeMarket = (): any => {
   };
 };
 
-export const AaveV2Ethereum = makeMarket();
-
 const createEmptyMarket = makeMarket;
-
-export const AaveV2Avalanche = createEmptyMarket();
-export const AaveV2Fuji = createEmptyMarket();
-export const AaveV2Polygon = createEmptyMarket();
 export const AaveV3Arbitrum = createEmptyMarket();
 export const AaveV3Avalanche = createEmptyMarket();
 export const AaveV3Base = createEmptyMarket();
