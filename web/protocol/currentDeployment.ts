@@ -21,19 +21,19 @@ export interface DeploymentConfig {
 
 // ── Robinhood Chain tokens ───────────────────────────────────────────
 const ROBINHOOD_TOKENS: Record<string, Omit<TokenConfig, 'address'>> = {
-  USDG: { symbol: 'USDG', name: 'USDG', decimals: 6, logoUrl: '', category: 'stablecoin', priceUsd: 1 },
-  TSLA: { symbol: 'TSLA', name: 'Tesla Inc.', decimals: 18, logoUrl: '', category: 'stock', priceUsd: 350 },
-  AMZN: { symbol: 'AMZN', name: 'Amazon.com Inc.', decimals: 18, logoUrl: '', category: 'stock', priceUsd: 210 },
-  PLTR: { symbol: 'PLTR', name: 'Palantir Technologies Inc.', decimals: 18, logoUrl: '', category: 'stock', priceUsd: 95 },
-  NFLX: { symbol: 'NFLX', name: 'Netflix Inc.', decimals: 18, logoUrl: '', category: 'stock', priceUsd: 880 },
-  AMD: { symbol: 'AMD', name: 'Advanced Micro Devices Inc.', decimals: 18, logoUrl: '', category: 'stock', priceUsd: 165 },
+  USDG: { symbol: 'USDG', name: 'USDG', decimals: 6, logoUrl: '/icons/tokens/usdg.svg', category: 'stablecoin', priceUsd: 1 },
+  TSLA: { symbol: 'TSLA', name: 'Tesla Inc.', decimals: 18, logoUrl: '/icons/tokens/tsla.svg', category: 'stock', priceUsd: 350 },
+  AMZN: { symbol: 'AMZN', name: 'Amazon.com Inc.', decimals: 18, logoUrl: '/icons/tokens/amzn.svg', category: 'stock', priceUsd: 210 },
+  PLTR: { symbol: 'PLTR', name: 'Palantir Technologies Inc.', decimals: 18, logoUrl: '/icons/tokens/pltr.svg', category: 'stock', priceUsd: 95 },
+  NFLX: { symbol: 'NFLX', name: 'Netflix Inc.', decimals: 18, logoUrl: '/icons/tokens/nflx.svg', category: 'stock', priceUsd: 880 },
+  AMD: { symbol: 'AMD', name: 'Advanced Micro Devices Inc.', decimals: 18, logoUrl: '/icons/tokens/amd.svg', category: 'stock', priceUsd: 165 },
 };
 
 // ── Arbitrum Sepolia tokens (Ondo-style RWAs) ────────────────────────
 const ARBITRUM_TOKENS: Record<string, Omit<TokenConfig, 'address'>> = {
-  USDC: { symbol: 'USDC', name: 'USD Coin', decimals: 6, logoUrl: '', category: 'stablecoin', priceUsd: 1 },
-  OUSG: { symbol: 'OUSG', name: 'Ondo Short-Term US Gov Bond', decimals: 18, logoUrl: '', category: 'rwa', priceUsd: 100 },
-  USDY: { symbol: 'USDY', name: 'Ondo US Dollar Yield', decimals: 18, logoUrl: '', category: 'rwa', priceUsd: 1.05 },
+  USDC: { symbol: 'USDC', name: 'USD Coin', decimals: 6, logoUrl: '/icons/tokens/usdc.svg', category: 'stablecoin', priceUsd: 1 },
+  OUSG: { symbol: 'OUSG', name: 'Ondo Short-Term US Gov Bond', decimals: 18, logoUrl: '/icons/tokens/ousdg.png', category: 'rwa', priceUsd: 100 },
+  USDY: { symbol: 'USDY', name: 'Ondo US Dollar Yield', decimals: 18, logoUrl: '/icons/tokens/usdy.svg', category: 'rwa', priceUsd: 1.05 },
 };
 
 // ── Chain → token meta map ──────────────────────────────────────────
