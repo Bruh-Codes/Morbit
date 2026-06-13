@@ -2,7 +2,7 @@
 
 # Morbit — RWA Lending Protocol
 
-Morbit is a non-custodial real-world asset lending protocol on **Robinhood Chain Testnet** and **Arbitrum**. Users supply tokenized stocks (TSLA, AMZN, PLTR, NFLX, AMD) as collateral and borrow USDG stablecoin.
+Morbit is a non-custodial real-world asset lending protocol on **Robinhood Chain Testnet** and **Arbitrum Sepolia**. On Robinhood, users supply tokenized stocks (TSLA, AMZN, PLTR, NFLX, AMD) as collateral and borrow USDG stablecoin. On Arbitrum Sepolia, users supply Ondo-style RWA tokens (OUSG, USDY) as collateral and borrow USDC.
 
 ---
 
@@ -31,10 +31,10 @@ indexer/                 Subgraph for The Graph
 
 ## Markets
 
-| Market      | Chain ID | Type     | Collateral Assets           | Borrow Asset |
-| ----------- | -------: | -------- | --------------------------- | ------------ |
-| Robinhood   |    46630 | RWA      | TSLA, AMZN, PLTR, NFLX, AMD | USDG         |
-| Arbitrum V3 |    42161 | Standard | Aave V3 assets              | Aave V3      |
+| Market        | Chain ID | Type     | Collateral Assets                     | Borrow Asset |
+| ------------- | -------: | -------- | ------------------------------------- | ------------ |
+| Robinhood RWA |    46630 | RWA      | TSLA, AMZN, PLTR, NFLX, AMD           | USDG         |
+| Arbitrum RWA  |   421614 | RWA      | OUSG (Ondo), USDY (Ondo)              | USDC         |
 
 ---
 
@@ -69,6 +69,16 @@ Upgradeable lending pool (`Initializable` + `OwnableUpgradeable`) with a `Transp
 | AMD | `0x71178BAc73cBeb415514eB542a8995b82669778d` |
 | WETH | `0x7943e237c7F95DA44E0301572D358911207852Fa` |
 
+### Deployed on Arbitrum Sepolia (chain 421614)
+
+| Contract | Address |
+|----------|---------|
+| **RWAPool** | `0x73caA38805406520f1A6D8c4BD8D1F6Ca7CC5549` |
+| USDC | `0xe00da2a8Dd940482AC30d13dBd346F108BAAdab3` |
+| OUSG | `0x73926de4Fa5A4F9B746AF417B0dd4F8213572950` |
+| USDY | `0x3cD2e554acFb12126F9d1A91b599549B971680C8` |
+| WETH | `0x7943e237c7F95DA44E0301572D358911207852Fa` |
+
 ---
 
 ## Getting Started
@@ -98,16 +108,19 @@ Required env vars: `DEPLOYER_PRIVATE_KEY`
 ### Deployment Flow
 
 ```
-contracts/config/tokens.js        ← single source of truth
-        ↓
-contracts/ignition/deployments/   ← Hardhat Ignition artifacts
-        ↓
-node scripts/sync-deployment.js   ← reads artifacts + tokens.js
-        ↓
-web/ui-config/robinhoodDeployment.json  ← consumed by UI
+contracts/config/tokens.js              ← single source of truth (Robinhood)
+contracts/config/tokens-arbitrum.js     ← single source of truth (Arbitrum)
+         ↓
+contracts/ignition/deployments/         ← Hardhat Ignition artifacts
+         ↓
+node scripts/sync-deployment.js         ← Robinhood: artifacts + tokens.js
+node scripts/sync-arbitrum-deployment.js ← Arbitrum: artifacts + tokens-arbitrum.js
+         ↓
+web/ui-config/robinhoodDeployment.json  ← consumed by UI (Robinhood)
+web/ui-config/arbitrumDeployment.json   ← consumed by UI (Arbitrum)
 ```
 
-No env var overrides for pool or token addresses.
+No env var overrides for pool or token addresses. Chain switching is handled by `currentDeployment.ts` which selects the right config based on chain ID.
 
 ---
 
@@ -166,8 +179,10 @@ Once live, update `aave-compat.ts`'s `useUserTransactionHistory` stub to query y
 | `npx hardhat compile` | Compile Solidity |
 | `npx hardhat test` | Run tests |
 | `npx hardhat ignition deploy ...` | Deploy via Ignition |
-| `npx hardhat run scripts/init-reserves.js` | Initialize on-chain reserves |
-| `node scripts/sync-deployment.js` | Sync addresses to frontend |
+| `npx hardhat run scripts/init-reserves.js` | Initialize Robinhood reserves |
+| `npx hardhat run scripts/init-reserves-arbitrum.js` | Initialize Arbitrum reserves |
+| `node scripts/sync-deployment.js` | Sync Robinhood addresses to frontend |
+| `node scripts/sync-arbitrum-deployment.js` | Sync Arbitrum addresses to frontend |
 
 ### Indexer (`indexer/`)
 
@@ -184,16 +199,22 @@ Once live, update `aave-compat.ts`'s `useUserTransactionHistory` stub to query y
 | File | Purpose |
 |------|---------|
 | `contracts/contracts/RWAPool.sol` | Upgradeable lending pool |
-| `contracts/ignition/modules/RWAPoolModule.ts` | Ignition deployment module |
-| `contracts/config/tokens.js` | Token addresses & reserve params |
-| `contracts/scripts/init-reserves.js` | On-chain reserve setup |
-| `contracts/scripts/sync-deployment.js` | Sync addresses to frontend |
+| `contracts/ignition/modules/RWAPoolModule.ts` | Ignition deployment module (Robinhood) |
+| `contracts/ignition/modules/ArbitrumDeploymentModule.ts` | Ignition deployment module (Arbitrum) |
+| `contracts/config/tokens.js` | Robinhood token addresses & reserve params |
+| `contracts/config/tokens-arbitrum.js` | Arbitrum token addresses & reserve params |
+| `contracts/scripts/init-reserves.js` | On-chain reserve setup (Robinhood) |
+| `contracts/scripts/init-reserves-arbitrum.js` | On-chain reserve setup (Arbitrum) |
+| `contracts/scripts/sync-deployment.js` | Sync Robinhood addresses to frontend |
+| `contracts/scripts/sync-arbitrum-deployment.js` | Sync Arbitrum addresses to frontend |
 | `web/protocol/aave-compat.ts` | Stub layer routing Aave SDK calls → RWAPool |
 | `web/protocol/rwaContracts.ts` | On-chain glue (ABI, providers, fetchers) |
 | `web/protocol/rwaTokens.ts` | Token UI metadata |
+| `web/protocol/currentDeployment.ts` | Multi-chain deployment registry |
 | `web/store/transactionsSlice.ts` | Local transaction storage (Zustand) |
-| `web/hooks/useTransactionHistory.tsx` | History merge (local + SDK + CowSwap) |
-| `web/ui-config/robinhoodDeployment.json` | Auto-generated UI config |
+| `web/hooks/useTransactionHistory.tsx` | History merge (local + SDK) |
+| `web/ui-config/robinhoodDeployment.json` | Auto-generated UI config (Robinhood) |
+| `web/ui-config/arbitrumDeployment.json` | Auto-generated UI config (Arbitrum) |
 | `indexer/subgraph.yaml` | Subgraph manifest |
 | `indexer/src/mapping.ts` | Event handler mappings |
 
@@ -203,16 +224,19 @@ Once live, update `aave-compat.ts`'s `useUserTransactionHistory` stub to query y
 
 | Asset | Faucet |
 |-------|--------|
-| USDG | https://faucet.paxos.com/?network=robinhood |
-| ETH + Stock Tokens | https://faucet.testnet.chain.robinhood.com/ |
+| USDG (Robinhood) | https://faucet.paxos.com/?network=robinhood |
+| ETH + Stock Tokens (Robinhood) | https://faucet.testnet.chain.robinhood.com/ |
+| USDC, OUSG, USDY (Arbitrum Sepolia) | https://faucet.quicknode.com/arbitrum/sepolia |
 
 ---
 
 ## Notes
 
-- The Robinhood market uses a stub layer in `web/protocol/aave-compat.ts` that routes all `@aave/*` SDK calls to the RWAPool contract via ethers.
+- Both Robinhood and Arbitrum markets use the stub layer in `web/protocol/aave-compat.ts` that routes all `@aave/*` SDK calls to the RWAPool contract via ethers.
+- The multi-chain deployment registry (`currentDeployment.ts`) switches pool address, RPC, and token list based on chain ID.
+- Arbitrum Sepolia uses Ondo-style RWA tokens (OUSG, USDY) with USDC as the borrow asset — differentiates from the stock-based Robinhood market.
 - APY history charts use mock data generators — no subgraph dependency.
-- `ENABLE_TESTNET = true` is hardcoded so Robinhood Testnet always appears.
+- `ENABLE_TESTNET = true` is hardcoded so both testnets always appear.
 - Body background is set via inline `<script>` before React hydrates to prevent white flash on dark mode.
 - The Swap module is excluded from TypeScript type-checking via `tsconfig.json`.
 
