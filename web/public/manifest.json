@@ -1,0 +1,17 @@
+{
+  "short_name": "Morbit",
+  "name": "Morbit",
+  "description": "RWA lending protocol",
+  "iconPath": "icon.svg",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "32x32",
+      "type": "image/x-icon"
+    }
+  ],
+  "start_url": "./",
+  "display": "standalone",
+  "theme_color": "#1B2030",
+  "background_color": "#ffffff"
+}

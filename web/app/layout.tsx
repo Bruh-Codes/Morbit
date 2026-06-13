@@ -1,0 +1,48 @@
+import '../public/fonts/inter/inter.css';
+import '../styles/variables.css';
+
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
+import type { Metadata } from 'next';
+import { ReactNode } from 'react';
+import NextTopLoader from 'nextjs-toploader';
+
+import { Providers } from './providers';
+
+export const metadata: Metadata = {
+  title: 'Open Source Liquidity Protocol',
+  description:
+    'Morbit is an Open Source Protocol to create Non-Custodial Liquidity Markets for Real World Assets to earn interest on supplying and borrowing assets.',
+  icons: {
+    icon: '/icon.svg',
+  },
+};
+
+export default function RootLayout({ children }: { children: ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta name="theme-color" content="#0A0A0A" />
+        <link rel="manifest" href="/manifest.json" />
+      </head>
+      <body>
+        <AppRouterCacheProvider options={{ key: 'css', prepend: true }}>
+          <Providers>
+            <NextTopLoader
+              showSpinner={false}
+              color="#B8E600"
+              initialPosition={0.04}
+              crawlSpeed={300}
+              height={2}
+              crawl={true}
+              easing="ease"
+              speed={350}
+              shadow="0 0 10px #B8E600,0 0 5px #B8E600"
+              zIndex={9999}
+            />
+            {children}
+          </Providers>
+        </AppRouterCacheProvider>
+      </body>
+    </html>
+  );
+}

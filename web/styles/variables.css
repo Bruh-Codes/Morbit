@@ -1,0 +1,16 @@
+:root {
+  --header-height: 64px;
+  --morbit-bg: #0A0A0A;
+  --morbit-surface: #111111;
+  --morbit-surface-elevated: #1A1A1A;
+  --morbit-accent: #CCFF00;
+  --morbit-accent-hover: #B8E600;
+  --morbit-text: #FFFFFF;
+  --morbit-text-secondary: #A0A0A0;
+  --morbit-text-muted: #707070;
+  --morbit-border: rgba(255, 255, 255, 0.08);
+}
+
+[hidden] {
+  display: none !important;
+}

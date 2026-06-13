@@ -1,0 +1,4 @@
+# repo-level ignores
+node_modules/
+
+# Keep existing project-level ignores intact (see web/.gitignore and contracts/.gitignore)
