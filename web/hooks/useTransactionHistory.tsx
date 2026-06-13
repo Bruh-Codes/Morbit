@@ -145,6 +145,8 @@ export const useTransactionHistory = ({ isFilterActive }: { isFilterActive: bool
   const [hasLoadedInitialSdkPage, setHasLoadedInitialSdkPage] = useState(false);
   const [shouldKeepFetching, setShouldKeepFetching] = useState(false);
 
+  const localTxns = useRootStore((state) => state.transactions);
+
   const isAccountValid = account && account.length > 0;
 
   const {
@@ -539,21 +541,59 @@ export const useTransactionHistory = ({ isFilterActive }: { isFilterActive: bool
     initialPageParam: 0,
   });
 
+  const localTxnsTransformed = useMemo(() => {
+    const chainLocalTxns = localTxns?.[currentMarketData.chainId];
+    if (!chainLocalTxns) return [];
+    return Object.entries(chainLocalTxns).map(([hash, tx]) => {
+      const asset = tx.asset?.toLowerCase() || '';
+      const reserve = reserves.find(
+        (r) => r.underlyingToken?.address?.toLowerCase() === asset
+      );
+      const underlyingToken = reserve
+        ? reserve.underlyingToken
+        : { address: asset, symbol: tx.assetName || '', name: '', decimals: 18, logoUrl: '' };
+      const actionMap: Record<string, string> = {
+        supply: 'UserSupplyTransaction',
+        withdraw: 'UserWithdrawTransaction',
+        borrow: 'UserBorrowTransaction',
+        repay: 'UserRepayTransaction',
+        liquidationCall: 'UserLiquidationCallTransaction',
+        setUsageAsCollateral: 'UserUsageAsCollateralTransaction',
+      };
+      const typename = actionMap[tx.action || ''] || 'default';
+      return {
+        id: hash,
+        __typename: typename,
+        action: typename,
+        timestamp: new Date().toISOString(),
+        txHash: hash,
+        amount: {
+          amount: { value: tx.amount || '0' },
+          usd: tx.amountUsd || '0',
+        },
+        reserve: {
+          underlyingToken,
+        },
+      };
+    });
+  }, [localTxns, currentMarketData.chainId, reserves]);
+
   const mergedData = useMemo(() => {
+    const localPage = localTxnsTransformed.slice().sort(sortTransactionsByTimestampDesc);
     if (!data) {
-      if (sdkTransactions.length === 0) {
+      if (sdkTransactions.length === 0 && localPage.length === 0) {
         return data;
       }
 
       return {
         pageParams: [0],
-        pages: [sdkTransactions.slice().sort(sortTransactionsByTimestampDesc)],
+        pages: [[...localPage, ...sdkTransactions].sort(sortTransactionsByTimestampDesc)],
       };
     }
 
     const pagesWithSdk = data.pages.map((page: any, index: number) => {
       if (index === 0) {
-        const combined = [...sdkTransactions, ...page];
+        const combined = [...localPage, ...sdkTransactions, ...page];
         return combined.sort(sortTransactionsByTimestampDesc);
       }
       return page;
@@ -563,7 +603,7 @@ export const useTransactionHistory = ({ isFilterActive }: { isFilterActive: bool
       ...data,
       pages: pagesWithSdk,
     };
-  }, [data, sdkTransactions]);
+  }, [data, sdkTransactions, localTxnsTransformed]);
 
   // If filter is active, keep fetching until all data is returned so that it's guaranteed all filter results will be returned
   useEffect(() => {

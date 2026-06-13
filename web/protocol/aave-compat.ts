@@ -769,7 +769,8 @@ export const PageSize = { Fifty: 50 };
 export type Cursor = any;
 export const useUserTransactionHistory = (..._args: any[]): any => ({
   data: null,
-  isPending: true,
+  isPending: false,
+  pageInfo: { next: null },
 });
 
 // ---- Additional types used by various files ----
