@@ -1,4 +1,4 @@
-<img width="1254" height="1254" alt="Frame 2085660247" src="https://github.com/user-attachments/assets/85b0d927-08fc-44fe-a48f-8097a326785f" />
+<img width="400" alt="Frame 2085660247" src="https://github.com/user-attachments/assets/85b0d927-08fc-44fe-a48f-8097a326785f" />
 
 # Morbit
 
