@@ -5,6 +5,7 @@ import { BigNumber } from 'bignumber.js';
 import { valueToBigNumber } from 'protocol/aave-compat';
 
 import { FormattedNumber } from './primitives/FormattedNumber';
+import { TextWithTooltip } from './TextWithTooltip';
 
 interface HealthFactorNumberProps extends TypographyProps {
   value: string;
@@ -34,9 +35,16 @@ export const HealthFactorNumber = ({ value, onInfoClick, ...rest }: HealthFactor
       data-cy={'HealthFactorTopPannel'}
     >
       {value === '-1' ? (
-        <Typography variant="secondary14" color={palette.success.main}>
-          ∞
-        </Typography>
+        <Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
+          <Typography variant="secondary14" color={palette.success.main}>
+            ∞
+          </Typography>
+          <TextWithTooltip>
+            <Trans>
+              No debt means your position cannot be liquidated. The Health Factor is infinite.
+            </Trans>
+          </TextWithTooltip>
+        </Box>
       ) : (
         <FormattedNumber
           value={formattedHealthFactor}
