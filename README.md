@@ -6,10 +6,6 @@ It gives users a fast way to browse markets, inspect reserves, manage positions,
 
 ## Why Morbit
 
-HackQuest’s Open House London Buildathon rewards projects that combine smart contract quality, product-market fit, innovation, and real problem solving.
-
-Morbit is built around that shape:
-
 - It runs on an Arbitrum chain, which satisfies the event deployment requirement.
 - It supports Robinhood Chain Testnet as a primary market, which aligns with the reserved Robinhood track.
 - It ships as a real product, not a slide deck or prototype.
@@ -24,7 +20,6 @@ Morbit is built around that shape:
 - Track supply, borrow, collateral, and transaction flows
 - Switch between light and dark themes
 - Support both Robinhood and Arbitrum markets in the same codebase
-
 
 ## Tech Stack
 
@@ -55,10 +50,10 @@ Morbit is built around that shape:
 
 ## Markets
 
-| Market | Chain ID | Type | Collateral Assets | Borrow Asset |
-|---|---:|---|---|---|
-| Robinhood | 46630 | RWA | TSLA, AMZN, PLTR, NFLX, AMD | USDG |
-| Arbitrum V3 | 42161 | Standard | Aave V3 assets | Aave V3 |
+| Market      | Chain ID | Type     | Collateral Assets           | Borrow Asset |
+| ----------- | -------: | -------- | --------------------------- | ------------ |
+| Robinhood   |    46630 | RWA      | TSLA, AMZN, PLTR, NFLX, AMD | USDG         |
+| Arbitrum V3 |    42161 | Standard | Aave V3 assets              | Aave V3      |
 
 ## Getting Started
 
