@@ -167,18 +167,19 @@ export async function fetchRwaUserAccountData(user: string, provider?: Provider)
       availableBorrowsBase: '0',
       currentLiquidationThreshold: '0',
       ltv: '0',
-      healthFactor: '115792089237316195423570985008687907853269984665640564039457584007913129639935',
+      healthFactor: '-1',
     };
   }
   const pool = getRwaPoolContract(provider || getFallbackProvider());
   const data = await pool.getUserAccountData(user);
+  const totalDebtBase = data.totalDebtBase.toString();
   return {
     totalCollateralBase: data.totalCollateralBase.toString(),
-    totalDebtBase: data.totalDebtBase.toString(),
+    totalDebtBase,
     availableBorrowsBase: data.availableBorrowsBase.toString(),
     currentLiquidationThreshold: data.currentLiquidationThreshold.toString(),
     ltv: data.ltv.toString(),
-    healthFactor: data.healthFactor.toString(),
+    healthFactor: totalDebtBase === '0' ? '-1' : data.healthFactor.toString(),
   };
 }
 

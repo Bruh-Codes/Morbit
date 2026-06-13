@@ -574,7 +574,7 @@ export const calculateHealthFactorFromBalancesBigUnits = (..._args: any[]): any 
   const collateral = Number(collateralBalanceMarketReferenceCurrency || 0);
   const debt = Number(borrowBalanceMarketReferenceCurrency || 0);
   const liqThreshold = Number(currentLiquidationThreshold || 0);
-  if (debt === 0) return valueToBigNumber('115792089237316195423570985008687907853269984665640564039457584007913129639935');
+  if (debt === 0) return valueToBigNumber('-1');
   const hf = (collateral * liqThreshold) / (debt * 10000);
   return valueToBigNumber(hf.toString());
 };
