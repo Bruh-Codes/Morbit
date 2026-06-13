@@ -303,7 +303,21 @@ export const DetailsHFLine = ({
   visibleHfChange,
   loading = false,
 }: DetailsHFLineProps) => {
-  if (healthFactor === '-1' && futureHealthFactor === '-1') return null;
+  if (healthFactor === '-1' && futureHealthFactor === '-1') {
+    return (
+      <Row caption={<Trans>Health factor</Trans>} captionVariant="description" mb={4} align="flex-start">
+        <Box sx={{ textAlign: 'right' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+            <HealthFactorNumber value="-1" variant="secondary14" />
+          </Box>
+          <Typography variant="helperText" color="text.secondary">
+            <Trans>Liquidation at</Trans>
+            {' <1.0'}
+          </Typography>
+        </Box>
+      </Row>
+    );
+  }
   return (
     <Row
       caption={<Trans>Health factor</Trans>}
