@@ -162,11 +162,21 @@ interface TokenIconProps extends IconProps {
   waTokens?: boolean[];
 }
 
+const TOKEN_FILENAME_OVERRIDES: Record<string, string> = {
+  ousg: 'ousdg',
+};
+
+function tokenFilename(symbol: string): string {
+  return TOKEN_FILENAME_OVERRIDES[symbol] || symbol;
+}
+
 function SingleTokenIcon({ symbol, aToken, waToken, ...rest }: TokenIconProps) {
-  const [tokenSymbol, setTokenSymbol] = useState(symbol.toLowerCase());
+  const [tokenSymbol, setTokenSymbol] = useState(() => tokenFilename(symbol.toLowerCase()));
+  const [usePng, setUsePng] = useState(false);
 
   useEffect(() => {
-    setTokenSymbol(symbol.toLowerCase());
+    setTokenSymbol(tokenFilename(symbol.toLowerCase()));
+    setUsePng(false);
   }, [symbol]);
 
   return (
@@ -175,8 +185,14 @@ function SingleTokenIcon({ symbol, aToken, waToken, ...rest }: TokenIconProps) {
         <TokenRing symbol={tokenSymbol} waToken={waToken} />
       ) : (
         <img
-          src={`/icons/tokens/${tokenSymbol}.svg`}
-          onError={() => setTokenSymbol('default')}
+          src={usePng ? `/icons/tokens/${tokenSymbol}.png` : `/icons/tokens/${tokenSymbol}.svg`}
+          onError={() => {
+            if (!usePng) {
+              setUsePng(true);
+            } else {
+              setTokenSymbol('default');
+            }
+          }}
           width="100%"
           height="100%"
           alt={`${symbol} icon`}

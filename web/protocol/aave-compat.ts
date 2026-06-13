@@ -9,6 +9,7 @@ import {
   fetchRwaReserves,
   fetchRwaUserAccountData,
   fetchRwaUserReserves,
+  getChainId,
   getErc20Contract,
   getFallbackProvider,
   getPoolAddress,
@@ -619,11 +620,18 @@ export const useUserMeritRewards = (..._args: any[]): any => ({ data: null, load
 
 // ---- from @aave/client/actions ----
 // Builds the SDK-style market snapshot (supplyReserves / borrowReserves /
-// userState) straight from the RWAPool on Robinhood Chain Testnet.
+// userState) straight from the RWAPool on the currently selected chain.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const markets = async (_client: any, args?: any): Promise<any> => {
   try {
     const user: string | undefined = args?.user;
+    const chainIds: number[] | undefined = args?.chainIds;
+    const targetChain = chainIds?.[0];
+    if (targetChain === ChainId.robinhood_testnet) {
+      setDeployment(robinhoodDeployment);
+    } else if (targetChain === ChainId.arbitrum_sepolia) {
+      setDeployment(arbitrumDeployment);
+    }
     const [reserves, userAccountData] = await Promise.all([
       fetchRwaReserves().catch(() =>
         // fallback to mock so the UI always has asset data
@@ -735,11 +743,12 @@ export const markets = async (_client: any, args?: any): Promise<any> => {
     );
 
     const dep = getPoolAddress();
-    const chainId = ChainId.robinhood_testnet;
+    const cid = getChainId();
+    const marketName = cid === ChainId.arbitrum_sepolia ? 'Arbitrum RWA' : 'Robinhood RWA';
     const market = {
       address: dep,
-      chainId,
-      name: 'Morbit RWA',
+      chainId: cid,
+      name: marketName,
       totalMarketSize,
       totalAvailableLiquidity,
       supplyReserves: uiReserves,
@@ -768,9 +777,9 @@ function mockMarketsReserves() {
     supplyRateBps: 280,
     borrowRateBps: t.category === 'stablecoin' ? 620 : 410,
     priceUsd: String(t.priceUsd * 1e8),
-    totalSupplied: t.category === 'stablecoin' ? '50000000000' : '10000000000000000000000000',
-    totalBorrowed: t.category === 'stablecoin' ? '30000000000' : '4000000000000000000000000',
-    availableLiquidity: t.category === 'stablecoin' ? '20000000000' : '6000000000000000000000000',
+    totalSupplied: t.category === 'stablecoin' ? '50000000000' : '1000000000000000000000',
+    totalBorrowed: t.category === 'stablecoin' ? '30000000000' : '400000000000000000000',
+    availableLiquidity: t.category === 'stablecoin' ? '20000000000' : '600000000000000000000',
   }));
 }
 
